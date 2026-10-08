@@ -5,8 +5,10 @@ name: kit-check
 
 on:
   push:
-    paths: [".claude/**", ".github/agents/**", ".github/prompts/**", "tools/**", "templates/**", "kit.json", "project/**", "tests/**"]
+    paths: [".claude/**", ".github/agents/**", ".github/prompts/**", ".github/workflows/kit-check.yml",
+            "tools/**", "templates/**", "kit.json", "project/**", "tests/**"]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
