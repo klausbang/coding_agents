@@ -439,18 +439,22 @@ Q-xxx     question to the human</pre>
   <!-- ============ REPO ============ -->
   <section id="repo">
     <h2>Repository template</h2>
-    <p class="section-intro">The same <code>project/</code> state and <code>tools/</code> scripts work for both Claude Code and Copilot. Only the agent definition files differ between the two.</p>
+    <p class="section-intro">The kit lives at <code>github.com/klausbang/coding_agents</code>. To start a project, clone it and run <code>python tools/kit.py init --name "&lt;Product&gt;"</code>. Projects pull kit updates with <code>kit.py pull</code> and send agent improvements back with <code>kit.py push</code>. The same <code>project/</code> state and <code>tools/</code> scripts work for both Claude Code and Copilot.</p>
 <pre class="code">&lt;product&gt;/
-├── CLAUDE.md                  orchestrator role, v-sprint process, gates, ID rules
+├── CLAUDE.md                  project facts + @.claude/orchestrator.md
+├── kit.json, .kit/            kit manifest (upstream, kit-owned paths) · installed kit version
 ├── .claude/
+│   ├── orchestrator.md        main-session role: v-sprint process, gates, briefs
+│   ├── protocol.md            shared subagent rules: IDs, ownership, report block
 │   ├── agents/                11 subagent definitions
-│   ├── skills/                /sprint-start  /sprint-status  /gate  /trace  /release
-│   └── settings.json          hooks: write-guards, id-lint, notify · permissions
+│   ├── skills/                /sprint-start /sprint-status /gate /trace /release /kit-init /kit-sync
+│   ├── hooks/write_guard.py   blocks writes outside an agent's own paths
+│   └── settings.json          hooks (write guard, id lint) · permissions
 ├── .github/
-│   ├── copilot-instructions.md
-│   ├── agents/*.agent.md      Copilot custom agents with handoffs
-│   ├── prompts/*.prompt.md
-│   └── workflows/             ci.yml, deploy.yml
+│   ├── copilot-instructions.md, instructions/
+│   ├── agents/*.agent.md      generated Copilot custom agents with handoffs
+│   ├── prompts/*.prompt.md    generated from the skills
+│   └── workflows/             ci.yml, deploy.yml, kit-check.yml
 ├── project/
 │   ├── vision.md              human-owned
 │   ├── backlog/               EPIC / US / NFR files
@@ -463,8 +467,10 @@ Q-xxx     question to the human</pre>
 ├── migrations/                Alembic
 ├── tests/                     unit/ integration/ contract/ system/ security/ acceptance/
 ├── infra/                     Terraform / Bicep
-├── docs/
-└── tools/                     id_lint.py, trace_check.py, status_report.py</pre>
+├── docs/                      project docs · docs/kit/ = this page, plan, kit changelog
+├── templates/                 artifact templates · project skeleton
+└── tools/                     kit.py, agent_roles.json, id_lint.py, trace_check.py,
+                               status_report.py, build_copilot.py</pre>
   </section>
 
   <footer>The phased implementation plan, risks and open decisions are in <code>PLAN.md</code>, next to this page.</footer>
