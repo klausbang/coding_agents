@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 
-DEV_SECRET_KEY = "dev-only-change-me"
+DEV_SECRET_KEY = "dev-only-change-me"  # noqa: S105  (placeholder; create_app refuses it outside dev/test)
 
 
 class BaseConfig:

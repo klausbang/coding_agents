@@ -57,7 +57,8 @@ def main() -> int:
     qfile = ROOT / "project" / "hitl" / "questions.md"
     open_q = []
     if qfile.exists():
-        blocks = re.split(r"(?m)^#{2,3}\s+", read_text(qfile))[1:]
+        text = re.sub(r"<!--.*?-->", "", read_text(qfile), flags=re.S)
+        blocks = re.split(r"(?m)^#{2,3}\s+", text)[1:]
         open_q = [b.splitlines()[0] for b in blocks if re.search(r"status:\s*open", b)]
     print(f"- **Open questions:** {len(open_q)}" + "".join(f"\n  - {q}" for q in open_q))
 

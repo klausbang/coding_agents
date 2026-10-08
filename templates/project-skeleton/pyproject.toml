@@ -52,6 +52,7 @@ markers = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+extend-exclude = ["tools", ".claude", "templates"]   # kit-owned files, checked in the kit repo
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "S", "SIM"]

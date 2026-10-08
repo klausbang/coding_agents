@@ -1,4 +1,7 @@
-"""Shared fixtures. Unit tests use SQLite in memory; integration tests use TEST_DATABASE_URL (PostgreSQL)."""
+"""Shared fixtures.
+
+Unit tests use SQLite in memory; integration tests use TEST_DATABASE_URL (PostgreSQL).
+"""
 from __future__ import annotations
 
 import pytest
