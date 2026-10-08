@@ -1,0 +1,703 @@
+<title>Agile V Agent Team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --bg: #F4F6F8;
+  --surface: #FFFFFF;
+  --ink: #18212B;
+  --muted: #566373;
+  --line: #D5DAE1;
+  --spec: #2B5A9B;  --spec-bg: #E4ECF7;
+  --test: #1B7A63;  --test-bg: #DEF1EA;
+  --build: #9A5C0C; --build-bg: #F8EBD8;
+  --x: #5E5296;     --x-bg: #ECE9F6;
+  --orc: #18212B;   --orc-bg: #E6E9ED;
+  --code-bg: #EEF1F4;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #11161C; --surface: #19212A; --ink: #E5E9EE; --muted: #9AA6B4; --line: #2E3843;
+    --spec: #86AEE6;  --spec-bg: #1C2B40;
+    --test: #6CC9AA;  --test-bg: #15322A;
+    --build: #E3A95C; --build-bg: #382813;
+    --x: #B2A6EA;     --x-bg: #29243F;
+    --orc: #E5E9EE;   --orc-bg: #252E39;
+    --code-bg: #151C23;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #11161C; --surface: #19212A; --ink: #E5E9EE; --muted: #9AA6B4; --line: #2E3843;
+  --spec: #86AEE6;  --spec-bg: #1C2B40;
+  --test: #6CC9AA;  --test-bg: #15322A;
+  --build: #E3A95C; --build-bg: #382813;
+  --x: #B2A6EA;     --x-bg: #29243F;
+  --orc: #E5E9EE;   --orc-bg: #252E39;
+  --code-bg: #151C23;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  padding-inline: 20px;
+  padding-block: 0 64px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; }
+
+header.top { padding-block: 48px 28px; border-bottom: 1px solid var(--line); }
+.eyebrow {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 10px;
+}
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(34px, 5vw, 52px); font-weight: 700; letter-spacing: -.01em; }
+h2 { font-size: 30px; font-weight: 600; margin-bottom: 8px; }
+h3 { font-size: 20px; font-weight: 600; }
+.lede { max-width: 68ch; color: var(--muted); font-size: 18px; margin: 14px 0 0; }
+
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 22px; font-size: 14px; }
+nav.toc a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; }
+nav.toc a:hover, nav.toc a:focus-visible { border-color: var(--ink); }
+a:focus-visible { outline: 2px solid var(--spec); outline-offset: 2px; }
+
+section { padding-block: 48px 8px; }
+.section-intro { max-width: 70ch; color: var(--muted); margin: 0 0 22px; }
+
+.stack { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.stack span {
+  font-family: var(--mono); font-size: 12.5px; padding: 3px 9px; border-radius: 4px;
+  background: var(--surface); border: 1px solid var(--line); color: var(--muted);
+}
+
+figure.diagram {
+  margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 20px 16px; overflow-x: auto;
+}
+.mm { display: flex; justify-content: center; min-height: 120px; align-items: center; }
+.mm svg { max-width: none; height: auto; }
+.mm .pending { color: var(--muted); font-size: 14px; }
+.mm pre { white-space: pre; font-size: 12px; text-align: left; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 14px; max-width: 80ch; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 16px 0 0; padding: 0; list-style: none; font-size: 14px; }
+.legend li { display: flex; align-items: center; gap: 8px; }
+.sw { width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid; flex: none; }
+.sw.spec { background: var(--spec-bg); border-color: var(--spec); }
+.sw.build { background: var(--build-bg); border-color: var(--build); }
+.sw.test { background: var(--test-bg); border-color: var(--test); }
+.sw.x { background: var(--x-bg); border-color: var(--x); }
+.sw.orc { background: var(--orc-bg); border-color: var(--orc); }
+
+.table-wrap { overflow-x: auto; margin-top: 24px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; min-width: 640px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--mono); font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+td.lvl { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); width: 3.5em; }
+td code, li code, p code { font-family: var(--mono); font-size: .9em; }
+
+.group { margin-top: 34px; }
+.group-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.group-head .sw { align-self: center; }
+.group-head p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 18px 20px 16px; display: flex; flex-direction: column; gap: 10px;
+}
+.card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.card h3 { font-family: var(--mono); font-size: 16px; font-weight: 500; letter-spacing: -.01em; }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; justify-content: flex-end; }
+.chip {
+  font-family: var(--mono); font-size: 11px; line-height: 1; padding: 4px 7px; border-radius: 3px;
+  border: 1px solid; white-space: nowrap;
+}
+.chip.spec { color: var(--spec); background: var(--spec-bg); border-color: var(--spec); }
+.chip.build { color: var(--build); background: var(--build-bg); border-color: var(--build); }
+.chip.test { color: var(--test); background: var(--test-bg); border-color: var(--test); }
+.chip.x { color: var(--x); background: var(--x-bg); border-color: var(--x); }
+.chip.orc { color: var(--orc); background: var(--orc-bg); border-color: var(--orc); }
+.role { margin: 0; font-size: 15px; }
+.card ul { margin: 0; padding-left: 18px; font-size: 14.5px; display: grid; gap: 3px; }
+.card dl { margin: 4px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; font-size: 13.5px; border-top: 1px solid var(--line); padding-top: 10px; }
+.card dt { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); padding-top: 2px; }
+.card dd { margin: 0; }
+.card dd code { font-family: var(--mono); font-size: 12.5px; }
+
+.gates { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+.gate { padding: 16px 18px; border-right: 1px solid var(--line); }
+.gate:last-child { border-right: 0; }
+.gate .id { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.gate h3 { font-size: 18px; margin: 2px 0 6px; }
+.gate p { margin: 0; font-size: 14px; color: var(--muted); }
+
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 20px; }
+pre.code {
+  margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px 18px; overflow-x: auto; font-family: var(--mono); font-size: 13px; line-height: 1.6; color: var(--ink);
+}
+.code-label { font-family: var(--mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin: 0 0 8px; }
+
+footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--muted); }
+
+@media (max-width: 720px) {
+  .gate { border-right: 0; border-bottom: 1px solid var(--line); }
+  .gate:last-child { border-bottom: 0; }
+}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <p class="eyebrow">Claude Code · GitHub Copilot · Flask + PostgreSQL</p>
+    <h1>Agile V Agent Team</h1>
+    <p class="lede">A reusable team of AI agents that plans, specifies, builds, verifies, validates and releases cloud-hosted Python Flask web applications with a database. Each agent is tied to one level of the V-model. A human approves the work at four gates.</p>
+    <div class="stack" aria-label="Reference stack">
+      <span>Python 3.12</span><span>Flask</span><span>SQLAlchemy 2</span><span>Alembic</span><span>PostgreSQL</span><span>OpenAPI 3.1</span><span>pytest</span><span>Playwright</span><span>pytest-bdd</span><span>Docker</span><span>GitHub Actions</span><span>Terraform</span>
+    </div>
+    <nav class="toc" aria-label="Contents">
+      <a href="#v-model">V-model</a>
+      <a href="#agents">Agents</a>
+      <a href="#interaction">Interaction</a>
+      <a href="#sprint">Sprint flow</a>
+      <a href="#gates">Human gates</a>
+      <a href="#repo">Repository</a>
+    </nav>
+  </header>
+
+  <!-- ============ V-MODEL ============ -->
+  <section id="v-model">
+    <h2>The V-model and its agents</h2>
+    <p class="section-intro">The left leg of the V turns needs into precise specifications. The bottom is where code is written. The right leg tests the result. Each test level on the right checks the specification at the same height on the left: level 1 is checked by level 1, level 2 by level 2, and so on. The orchestrator runs the whole V for every sprint.</p>
+
+    <figure class="diagram">
+      <div class="mm" data-src="src-v"><span class="pending">Rendering diagram…</span></div>
+      <figcaption>Read top-left → bottom → top-right. Each box shows the V-level, the agents working there and what they produce. The cross-cutting agents at the bottom work on every level.</figcaption>
+    </figure>
+    <ul class="legend">
+      <li><span class="sw spec"></span>Specification (left leg)</li>
+      <li><span class="sw build"></span>Implementation (bottom)</li>
+      <li><span class="sw test"></span>Verification &amp; validation (right leg)</li>
+      <li><span class="sw x"></span>Cross-cutting</li>
+      <li><span class="sw orc"></span>Control &amp; human</li>
+    </ul>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Lvl</th><th>Specify (left)</th><th>Agents</th><th>Is tested by (right)</th><th>Agents</th></tr></thead>
+        <tbody>
+          <tr><td class="lvl">1</td><td>Requirements analysis: stories, acceptance criteria, NFRs</td><td><code>requirements-engineer</code></td><td>Acceptance testing / UAT on staging</td><td><code>validation-engineer</code></td></tr>
+          <tr><td class="lvl">2</td><td>System architecture: components, API contract, cloud topology</td><td><code>system-architect</code>, <code>security-engineer</code></td><td>System testing: E2E, load, security scan</td><td><code>verification-engineer</code>, <code>security-engineer</code></td></tr>
+          <tr><td class="lvl">3</td><td>Component &amp; data design: blueprints, services, ERD</td><td><code>system-architect</code>, <code>database-engineer</code></td><td>Integration testing: API + real Postgres, contract tests</td><td><code>verification-engineer</code></td></tr>
+          <tr><td class="lvl">4</td><td>Module design: function specs as failing unit tests</td><td><code>backend-developer</code>, <code>frontend-developer</code></td><td>Unit testing</td><td>developers run them; <code>verification-engineer</code> audits them</td></tr>
+          <tr><td class="lvl">—</td><td colspan="2">Implementation: Flask code, templates, models, migrations, plus review</td><td colspan="2"><code>backend-developer</code>, <code>frontend-developer</code>, <code>database-engineer</code>, <code>code-reviewer</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ AGENTS ============ -->
+  <section id="agents">
+    <h2>What each agent does</h2>
+    <p class="section-intro">Each agent is a file <code>.claude/agents/&lt;name&gt;.md</code>, or <code>.github/agents/&lt;name&gt;.agent.md</code> for Copilot, with a fixed role, the files it reads, the folders it may write to, and a Definition of Done. Agents never talk to each other directly. They read and write the shared <code>project/</code> folder and report back to the orchestrator.</p>
+
+    <div class="group">
+      <div class="group-head"><span class="sw orc"></span><h3>Control</h3><p>The main session. The only agent that talks to the human.</p></div>
+      <div class="cards">
+        <article class="card">
+          <div class="card-head"><h3>orchestrator</h3><div class="chips"><span class="chip orc">all levels</span><span class="chip orc">Opus</span></div></div>
+          <p class="role">Runs the v-sprint from start to finish. Plans the work, sends tasks to the agents and asks the human for decisions.</p>
+          <ul>
+            <li>Turns a sprint goal into <code>sprint-N.md</code> and a short task brief for each agent</li>
+            <li>Starts agents in parallel when their work does not depend on each other</li>
+            <li>Collects the questions agents report, groups them and asks the human at gates G1–G4</li>
+            <li>Updates <code>hitl/status.md</code> after every step. Stops a fix loop after 3 tries and asks the human.</li>
+          </ul>
+          <dl><dt>Reads</dt><dd>all of <code>project/</code></dd><dt>Writes</dt><dd><code>project/sprints</code>, <code>project/hitl</code></dd><dt>Done</dt><dd>G4 signed off, retro written</dd></dl>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><span class="sw spec"></span><h3>Left leg: specify</h3><p>Answers "what exactly do we build?" before any code is written.</p></div>
+      <div class="cards">
+        <article class="card">
+          <div class="card-head"><h3>requirements-engineer</h3><div class="chips"><span class="chip spec">L1</span><span class="chip spec">Opus</span></div></div>
+          <p class="role">Turns the product vision into testable user stories.</p>
+          <ul>
+            <li>Splits epics into user stories that meet the INVEST criteria</li>
+            <li>Writes acceptance criteria as Given/When/Then with IDs (<code>AC-014.2</code>)</li>
+            <li>Captures NFRs: response time, availability, GDPR/privacy, WCAG accessibility</li>
+            <li>Reports anything ambiguous as a question with options to choose from</li>
+          </ul>
+          <dl><dt>Reads</dt><dd><code>vision.md</code>, backlog, validation findings</dd><dt>Writes</dt><dd><code>project/backlog</code></dd><dt>Done</dt><dd>every story has a priority, a size, and at least one testable AC</dd></dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>system-architect</h3><div class="chips"><span class="chip spec">L2</span><span class="chip spec">L3</span><span class="chip spec">Opus</span></div></div>
+          <p class="role">Designs the system's components and the API contracts every other agent builds against.</p>
+          <ul>
+            <li>Component model: blueprints, service layer, external integrations (email, OIDC, payment)</li>
+            <li>Writes the OpenAPI 3.1 contract before the endpoints are coded</li>
+            <li>Cloud topology: container service, managed Postgres, key vault, CDN</li>
+            <li>Records each significant decision as an ADR. Sets the NFR budgets, e.g. p95 latency.</li>
+          </ul>
+          <dl><dt>Reads</dt><dd>stories, NFRs, existing ADRs</dd><dt>Writes</dt><dd><code>project/architecture</code>, <code>project/interfaces</code></dd><dt>Done</dt><dd>every story is mapped to components and endpoints, and the spec lints clean</dd></dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>database-engineer</h3><div class="chips"><span class="chip spec">L3</span><span class="chip build">build</span><span class="chip spec">Sonnet</span></div></div>
+          <p class="role">Owns the data model and the only path for changing it: migrations.</p>
+          <ul>
+            <li>Maintains the ERD and keeps the schema normalized</li>
+            <li>Writes the SQLAlchemy 2 models and Alembic migrations, each with an upgrade and a downgrade</li>
+            <li>Checks migrations for table locks and data loss. Designs indexes and spots N+1 queries.</li>
+            <li>Provides seed data and test fixtures (factory-boy)</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>app/models</code>, <code>migrations/</code>, <code>architecture/data</code></dd><dt>Done</dt><dd>upgrade and downgrade pass on a fresh Postgres, and destructive changes are approved at G2</dd></dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>security-engineer</h3><div class="chips"><span class="chip spec">L2</span><span class="chip test">R2</span><span class="chip x">Sonnet</span></div></div>
+          <p class="role">Brings security in at design time and tests it again before release.</p>
+          <ul>
+            <li>Writes a STRIDE threat model for each feature, and the authorization rules</li>
+            <li>Checks the code against the OWASP Top 10: access control, injection, CSRF, sessions</li>
+            <li>Runs bandit, pip-audit and gitleaks in CI, and an OWASP ZAP baseline scan on staging</li>
+            <li>Reviews security headers, cookie flags and how secrets are handled</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>tests/security</code>, <code>architecture/security</code></dd><dt>Done</dt><dd>no open high or critical findings, unless the human accepts the risk at a gate</dd></dl>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><span class="sw build"></span><h3>Bottom: implement</h3><p>Writes the code test-first, against the approved contract.</p></div>
+      <div class="cards">
+        <article class="card">
+          <div class="card-head"><h3>backend-developer</h3><div class="chips"><span class="chip spec">L4</span><span class="chip build">build</span><span class="chip build">Sonnet</span></div></div>
+          <p class="role">Implements Flask endpoints and business logic, writing the tests first (TDD).</p>
+          <ul>
+            <li>Writes failing unit tests from the module spec first</li>
+            <li>Blueprints → services → models. Input validation and consistent error responses.</li>
+            <li>Implements exactly what <code>openapi.yaml</code> says and never changes the contract alone</li>
+            <li>Uses mocks for dependencies that have not been built yet</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>app/</code> (not templates or models), <code>tests/unit</code></dd><dt>Done</dt><dd>unit tests green, ≥ 85% coverage of changed lines, ruff and mypy clean</dd></dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>frontend-developer</h3><div class="chips"><span class="chip spec">L4</span><span class="chip build">build</span><span class="chip build">Sonnet</span></div></div>
+          <p class="role">Builds the user interface that people use to complete each acceptance scenario.</p>
+          <ul>
+            <li>Jinja2 + HTMX views, or an SPA if one is chosen at G2</li>
+            <li>Forms with CSRF protection, server-side validation messages and clear error states</li>
+            <li>WCAG 2.2 AA markup, responsive layout down to phone width</li>
+            <li>Calls the API only as the contract defines it</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>app/templates</code>, <code>app/static</code>, <code>tests/unit/ui</code></dd><dt>Done</dt><dd>every AC path can be done in the UI, and the axe accessibility check is clean</dd></dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>code-reviewer</h3><div class="chips"><span class="chip build">build</span><span class="chip build">read-only</span></div></div>
+          <p class="role">A second pair of eyes on every change. It never edits code.</p>
+          <ul>
+            <li>Checks each change for correctness, edge cases and error handling</li>
+            <li>Checks the layering: blueprint → service → model, with no SQL in views</li>
+            <li>Flags security smells, duplicated code and unclear names</li>
+            <li>Reports findings by severity, and the developers fix them</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>project/sprints/reviews</code></dd><dt>Done</dt><dd>no open high-severity findings on the change</dd></dl>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><span class="sw test"></span><h3>Right leg: verify &amp; validate</h3><p>Verification asks "did we build it right?". Validation asks "did we build the right thing?".</p></div>
+      <div class="cards">
+        <article class="card">
+          <div class="card-head"><h3>verification-engineer</h3><div class="chips"><span class="chip test">R4</span><span class="chip test">R3</span><span class="chip test">R2</span><span class="chip test">Sonnet</span></div></div>
+          <p class="role">Tests the system at unit, integration and system level, independently of the developers.</p>
+          <ul>
+            <li>Derives test cases (<code>TC-xxx</code>) from the acceptance criteria, never from the code</li>
+            <li>Integration tests: Flask test client against a real Postgres (testcontainers)</li>
+            <li>Contract tests with schemathesis against <code>openapi.yaml</code></li>
+            <li>E2E tests with Playwright and load tests with locust against the NFR budgets. Audits unit test quality.</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>tests/integration</code>, <code>tests/contract</code>, <code>tests/system</code></dd><dt>Done</dt><dd>every TC is linked to an AC and passes, and each failure is filed as a <code>BUG-xxx</code></dd></dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>validation-engineer</h3><div class="chips"><span class="chip test">R1</span><span class="chip test">Opus</span></div></div>
+          <p class="role">Acts as the user: checks that the product actually solves the problem.</p>
+          <ul>
+            <li>Writes Gherkin acceptance scenarios from the AC <em>before</em> any code is written</li>
+            <li>Runs them with pytest-bdd + Playwright on the staging environment</li>
+            <li>Walks through persona journeys to find usability and missing-need gaps</li>
+            <li>Sends new insights back to the requirements-engineer as backlog changes</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>tests/acceptance</code>, validation report</dd><dt>Done</dt><dd>every AC has a passing scenario, and the report is ready for G3</dd></dl>
+        </article>
+      </div>
+    </div>
+
+    <div class="group">
+      <div class="group-head"><span class="sw x"></span><h3>Cross-cutting</h3><p>Work on every level of the V and keep the work buildable, deployable and traceable.</p></div>
+      <div class="cards">
+        <article class="card">
+          <div class="card-head"><h3>devops-engineer</h3><div class="chips"><span class="chip x">all levels</span><span class="chip x">Sonnet</span></div></div>
+          <p class="role">Builds and maintains the pipeline and the cloud environments.</p>
+          <ul>
+            <li>Dockerfile and docker-compose for local runs (app + Postgres + Mailpit)</li>
+            <li>GitHub Actions: lint → unit → integration → contract → build → staging → system → acceptance</li>
+            <li>Terraform/Bicep for the dev, staging and prod environments, and managed Postgres backups</li>
+            <li>Secrets in the cloud key vault. A manual approval rule protects prod.</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>.github/workflows</code>, <code>infra/</code>, <code>Dockerfile</code></dd><dt>Done</dt><dd>pipeline green, and staging can be rebuilt from scratch</dd></dl>
+        </article>
+        <article class="card">
+          <div class="card-head"><h3>docs-writer</h3><div class="chips"><span class="chip x">all levels</span><span class="chip x">Haiku / Sonnet</span></div></div>
+          <p class="role">Keeps the documentation and the traceability matrix in step with the code.</p>
+          <ul>
+            <li>Generates the API reference from <code>openapi.yaml</code></li>
+            <li>Writes the user and admin guides, the changelog and the release notes</li>
+            <li>Maintains <code>traceability.csv</code>: US ↔ AC ↔ IF ↔ module ↔ TC ↔ VAL</li>
+            <li>Runs <code>tools/trace_check.py</code> before every release</li>
+          </ul>
+          <dl><dt>Writes</dt><dd><code>docs/</code>, <code>project/traceability.csv</code></dd><dt>Done</dt><dd>trace check passes 100% for the sprint scope, and the docs build cleanly</dd></dl>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ INTERACTION ============ -->
+  <section id="interaction">
+    <h2>How the agents interact</h2>
+    <p class="section-intro">The orchestrator works like a dispatcher. Agents hand work to each other through files in <code>project/</code>, never by calling each other. Hooks and CI enforce the rules, so they do not depend on agents following their prompts. For example, a developer cannot edit an acceptance test.</p>
+    <figure class="diagram">
+      <div class="mm" data-src="src-int"><span class="pending">Rendering diagram…</span></div>
+      <figcaption>Solid arrows show work and artifacts. Dashed arrows show the standard report block, including any <code>QUESTIONS</code>, that every subagent returns to the orchestrator.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ SPRINT ============ -->
+  <section id="sprint">
+    <h2>One v-sprint, end to end</h2>
+    <p class="section-intro">Example sprint goal: <em>"Password reset by email"</em>. Every product goes through the same sequence. Only the backlog changes.</p>
+    <figure class="diagram">
+      <div class="mm" data-src="src-seq"><span class="pending">Rendering diagram…</span></div>
+      <figcaption>Implementation runs in parallel. The verification fix loop stops after 3 tries and goes to the human.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ============ GATES ============ -->
+  <section id="gates">
+    <h2>Where the human decides</h2>
+    <p class="section-intro">The orchestrator only interrupts the human at these points. Every question comes with options to choose from and a recommendation, and every answer is logged in <code>project/hitl/decisions.md</code>.</p>
+    <div class="gates">
+      <div class="gate"><span class="id">G1</span><h3>Scope</h3><p>Approve the sprint's stories, acceptance criteria and NFRs.</p></div>
+      <div class="gate"><span class="id">G2</span><h3>Design</h3><p>Approve the API contract changes, DB migrations, ADRs and threat model.</p></div>
+      <div class="gate"><span class="id">Ask</span><h3>Clarify</h3><p>Answer a blocking question at any time. Non-blocking questions wait for the next gate.</p></div>
+      <div class="gate"><span class="id">G3</span><h3>V&amp;V review</h3><p>Accept the test results and the validation findings, or send them back to the backlog.</p></div>
+      <div class="gate"><span class="id">G4</span><h3>Release</h3><p>Approve the production deploy. GitHub's prod environment also requires manual approval.</p></div>
+    </div>
+
+    <div class="two">
+      <div>
+        <p class="code-label">Report block every subagent returns</p>
+<pre class="code">STATUS: done | partial | blocked
+CHANGED: app/services/reset.py, tests/unit/...
+TRACE: US-014, AC-014.2, IF-009, TC-041
+QUESTIONS:
+  - id: Q-021
+    question: Reset token lifetime?
+    options: [A: 15 min, B: 1 h, C: 24 h]
+    recommendation: A, limits replay window
+    blocking: yes
+NEXT: verification of AC-014.1–4</pre>
+      </div>
+      <div>
+        <p class="code-label">ID scheme (enables traceability)</p>
+<pre class="code">EPIC-xx   epic
+US-xxx    user story
+AC-xxx.y  acceptance criterion
+NFR-xxx   non-functional requirement
+ADR-xxx   architecture decision
+IF-xxx    interface / endpoint
+TC-xxx    verification test case
+VAL-xxx   acceptance scenario
+BUG-xxx   defect
+Q-xxx     question to the human</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REPO ============ -->
+  <section id="repo">
+    <h2>Repository template</h2>
+    <p class="section-intro">The same <code>project/</code> state and <code>tools/</code> scripts work for both Claude Code and Copilot. Only the agent definition files differ between the two.</p>
+<pre class="code">&lt;product&gt;/
+├── CLAUDE.md                  orchestrator role, v-sprint process, gates, ID rules
+├── .claude/
+│   ├── agents/                11 subagent definitions
+│   ├── skills/                /sprint-start  /sprint-status  /gate  /trace  /release
+│   └── settings.json          hooks: write-guards, id-lint, notify · permissions
+├── .github/
+│   ├── copilot-instructions.md
+│   ├── agents/*.agent.md      Copilot custom agents with handoffs
+│   ├── prompts/*.prompt.md
+│   └── workflows/             ci.yml, deploy.yml
+├── project/
+│   ├── vision.md              human-owned
+│   ├── backlog/               EPIC / US / NFR files
+│   ├── architecture/          components, data/, security/, ADR-xxx.md
+│   ├── interfaces/openapi.yaml
+│   ├── sprints/               sprint-N.md, reviews/
+│   ├── traceability.csv
+│   └── hitl/                  questions.md, decisions.md, status.md
+├── app/                       Flask package: blueprints/ services/ models/ templates/ static/
+├── migrations/                Alembic
+├── tests/                     unit/ integration/ contract/ system/ security/ acceptance/
+├── infra/                     Terraform / Bicep
+├── docs/
+└── tools/                     id_lint.py, trace_check.py, status_report.py</pre>
+  </section>
+
+  <footer>The phased implementation plan, risks and open decisions are in <code>PLAN.md</code>, next to this page.</footer>
+</div>
+
+<!-- ============ MERMAID SOURCES ============ -->
+<script type="text/plain" id="src-v">
+flowchart TB
+  HUMAN(["👤 <b>Human-in-the-loop</b><br/>approves at gates G1–G4, answers questions"])
+  ORC["🧭 <b>orchestrator</b> · main session<br/>plans the v-sprint · dispatches agents · runs gates · reports status"]
+  HUMAN <-->|"decisions / status"| ORC
+
+  L1["<b>L1 · Requirements analysis</b><br/>requirements-engineer<br/><i>vision → user stories, acceptance criteria, NFRs</i>"]
+  L2["<b>L2 · System architecture</b><br/>system-architect · security-engineer<br/><i>components, OpenAPI contract, cloud topology,<br/>ADRs, threat model</i>"]
+  L3["<b>L3 · Component and data design</b><br/>system-architect · database-engineer<br/><i>blueprints and services, ERD, migration plan</i>"]
+  L4["<b>L4 · Module design</b><br/>backend-developer · frontend-developer<br/><i>function specs written as failing unit tests</i>"]
+  IMP["<b>Implementation</b><br/>backend-developer · frontend-developer · database-engineer<br/><i>Flask blueprints, services, Jinja/HTMX views,<br/>SQLAlchemy models, Alembic migrations</i><br/>code-reviewer reviews every change"]
+  R4["<b>R4 · Unit testing</b> ▲<br/>developers run pytest<br/><i>verification-engineer audits coverage and quality</i>"]
+  R3["<b>R3 · Integration testing</b> ▲<br/>verification-engineer<br/><i>API + real Postgres, contract tests vs OpenAPI</i>"]
+  R2["<b>R2 · System testing</b> ▲<br/>verification-engineer · security-engineer<br/><i>Playwright E2E, locust load, ZAP scan on staging</i>"]
+  R1["<b>R1 · Acceptance testing</b> ▲<br/>validation-engineer<br/><i>Gherkin scenarios from AC, UAT on staging</i>"]
+
+  ORC --> L1
+  ORC --- R1
+  L1 --> L2 --> L3 --> L4 --> IMP
+  R1 --- R2 --- R3 --- R4 --- IMP
+
+  subgraph CC["Cross-cutting · every level"]
+    DEVOPS["<b>devops-engineer</b><br/><i>Docker, CI/CD, cloud envs, secrets</i>"]
+    DOCS["<b>docs-writer</b><br/><i>API docs, guides, traceability matrix</i>"]
+  end
+  IMP ~~~ CC
+
+  class HUMAN,ORC orc
+  class L1,L2,L3,L4 spec
+  class IMP build
+  class R1,R2,R3,R4 test
+  class DEVOPS,DOCS x
+</script>
+
+<script type="text/plain" id="src-int">
+flowchart TB
+  H(["👤 Human-in-the-loop"])
+  O["🧭 <b>orchestrator</b><br/>main session"]
+  H <-->|"gates · questions · status"| O
+
+  subgraph SPEC["Specify · left leg"]
+    RE["requirements-engineer"]
+    SA["system-architect"]
+    DB["database-engineer"]
+  end
+  subgraph BUILD["Implement · bottom"]
+    BE["backend-developer"]
+    FE["frontend-developer"]
+    CR["code-reviewer"]
+  end
+  subgraph TEST["Verify and validate · right leg"]
+    VE["verification-engineer"]
+    SE["security-engineer"]
+    VA["validation-engineer"]
+  end
+  subgraph XC["Cross-cutting"]
+    DO["devops-engineer"]
+    DW["docs-writer"]
+  end
+
+  ST[("<b>project/</b> shared state<br/>backlog · architecture · openapi.yaml<br/>traceability · sprints · hitl")]
+  CI{{"<b>Hooks + CI</b><br/>write-guards · id-lint · tests<br/>trace_check · deploy"}}
+
+  O -->|"task brief"| SPEC
+  O -->|"task brief"| BUILD
+  O -->|"task brief"| TEST
+  O -->|"task brief"| XC
+  SPEC -->|"stories, contract, schema"| ST
+  ST -->|"specs to build against"| BUILD
+  BUILD -->|"code + unit tests"| CI
+  CI -->|"builds, staging env"| TEST
+  TEST -->|"bugs, findings, reports"| ST
+  XC <-->|"pipeline, docs, trace"| CI
+  SPEC -.->|"report"| O
+  BUILD -.->|"report"| O
+  TEST -.->|"report"| O
+
+  class H,O orc
+  class RE,SA,DB spec
+  class BE,FE,CR build
+  class VE,SE,VA test
+  class DO,DW x
+  class ST,CI store
+</script>
+
+<script type="text/plain" id="src-seq">
+sequenceDiagram
+  autonumber
+  actor H as Human
+  participant O as orchestrator
+  participant L as Specify agents
+  participant B as Build agents
+  participant T as Test agents
+  participant D as devops / docs
+
+  H->>O: /sprint-start "Password reset by email"
+  O->>L: requirements-engineer: draft stories, AC, NFRs
+  L-->>O: US-014 with AC-014.1 to AC-014.4
+  O->>H: G1 Scope - approve stories?
+  H-->>O: Approved
+  O->>L: architect, database, security: contract, schema, threats
+  L-->>O: IF-009 POST /password-reset, table reset_tokens, ADR-006
+  O->>H: G2 Design - approve contract and migration?
+  H-->>O: Approved
+  O->>T: validation-engineer: Gherkin scenarios from AC
+  par Parallel implementation
+    O->>B: backend-developer: token + email service (TDD)
+  and
+    O->>B: frontend-developer: request and reset forms
+  end
+  B-->>O: QUESTIONS Q-021 token lifetime? (recommend 15 min)
+  O->>H: Ask - token lifetime?
+  H-->>O: 15 min
+  B-->>O: done, unit tests green, review closed
+  O->>D: CI pipeline, deploy to staging
+  O->>T: integration, contract, E2E, ZAP scan, UAT
+  T-->>O: BUG-007 found, fixed in loop 1, UAT passed
+  O->>H: G3 V and V review - results and traceability
+  H-->>O: Accepted
+  O->>D: docs, changelog, trace_check
+  O->>H: G4 Release - deploy to prod?
+  H-->>O: Approved, deployed
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.15.0/mermaid.min.js"></script>
+<script>
+(function () {
+  var root = document.documentElement;
+  var media = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var seq = 0;
+
+  function isDark() {
+    var t = root.getAttribute('data-theme');
+    if (t === 'dark') return true;
+    if (t === 'light') return false;
+    return !!(media && media.matches);
+  }
+
+  function tok(name) {
+    return getComputedStyle(root).getPropertyValue(name).trim();
+  }
+
+  function classDefs() {
+    var ink = tok('--ink');
+    function def(cls, fill, stroke) {
+      return '\n  classDef ' + cls + ' fill:' + fill + ',stroke:' + stroke + ',stroke-width:1.5px,color:' + ink;
+    }
+    return def('spec', tok('--spec-bg'), tok('--spec')) +
+      def('test', tok('--test-bg'), tok('--test')) +
+      def('build', tok('--build-bg'), tok('--build')) +
+      def('x', tok('--x-bg'), tok('--x')) +
+      def('orc', tok('--orc-bg'), tok('--orc')) +
+      def('store', tok('--surface'), tok('--muted'));
+  }
+
+  function showSource(el, src) {
+    var pre = document.createElement('pre');
+    pre.textContent = src;
+    el.replaceChildren(pre);
+  }
+
+  async function renderAll() {
+    var nodes = document.querySelectorAll('.mm[data-src]');
+    if (!window.mermaid) {
+      nodes.forEach(function (el) { showSource(el, document.getElementById(el.dataset.src).textContent.trim()); });
+      return;
+    }
+    var dark = isDark();
+    window.mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      darkMode: dark,
+      fontFamily: '"IBM Plex Sans", "Segoe UI", Arial, sans-serif',
+      themeVariables: {
+        darkMode: dark,
+        fontSize: '14px',
+        background: tok('--surface'),
+        primaryColor: tok('--surface'),
+        primaryTextColor: tok('--ink'),
+        primaryBorderColor: tok('--line'),
+        lineColor: tok('--muted'),
+        textColor: tok('--ink'),
+        clusterBkg: tok('--bg'),
+        clusterBorder: tok('--line'),
+        edgeLabelBackground: tok('--surface'),
+        actorBkg: tok('--orc-bg'),
+        actorBorder: tok('--orc'),
+        actorTextColor: tok('--ink'),
+        actorLineColor: tok('--line'),
+        signalColor: tok('--ink'),
+        signalTextColor: tok('--ink'),
+        labelBoxBkgColor: tok('--x-bg'),
+        labelBoxBorderColor: tok('--x'),
+        labelTextColor: tok('--ink'),
+        loopTextColor: tok('--ink'),
+        noteBkgColor: tok('--build-bg'),
+        noteBorderColor: tok('--build'),
+        noteTextColor: tok('--ink'),
+        sequenceNumberColor: tok('--surface')
+      },
+      flowchart: { useMaxWidth: false, htmlLabels: true, curve: 'basis', nodeSpacing: 40, rankSpacing: 46, padding: 14 },
+      sequence: { useMaxWidth: false, mirrorActors: false, messageMargin: 32, actorMargin: 60 }
+    });
+    var defs = classDefs();
+    for (var i = 0; i < nodes.length; i++) {
+      var el = nodes[i];
+      var src = document.getElementById(el.dataset.src).textContent.trim();
+      var full = src.indexOf('flowchart') === 0 ? src + defs : src;
+      try {
+        var out = await window.mermaid.render('mmd-' + (++seq), full);
+        el.innerHTML = out.svg;
+      } catch (e) {
+        showSource(el, src);
+      }
+    }
+  }
+
+  function start() {
+    var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    ready.then(renderAll, renderAll);
+  }
+
+  new MutationObserver(function (m) {
+    if (m.some(function (r) { return r.attributeName === 'data-theme'; })) renderAll();
+  }).observe(root, { attributes: true });
+  if (media && media.addEventListener) media.addEventListener('change', renderAll);
+
+  start();
+})();
+</script>

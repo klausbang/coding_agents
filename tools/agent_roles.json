@@ -1,0 +1,61 @@
+{
+  "_comment": "Write permissions per subagent. Paths are repo-relative globs ('**' = any depth, '*' = within one segment). 'deny' wins over 'allow'; a '!' prefix marks an exception inside a list. 'global_deny' applies to every subagent. The main session (orchestrator) is not restricted by this file.",
+  "global_deny": [
+    ".env",
+    ".env.*",
+    "!.env.example",
+    "**/.env",
+    "**/*.pem",
+    "**/*.key",
+    ".claude/**",
+    ".github/agents/**",
+    ".github/prompts/**",
+    ".github/instructions/**",
+    ".github/copilot-instructions.md",
+    ".github/workflows/kit-check.yml",
+    "tools/**",
+    "templates/**",
+    "docs/kit/**",
+    "kit.json",
+    ".kit/**",
+    "project/hitl/**",
+    "project/sprints/sprint-*.md"
+  ],
+  "roles": {
+    "requirements-engineer": {
+      "allow": ["project/backlog/**"]
+    },
+    "system-architect": {
+      "allow": ["project/architecture/**", "project/interfaces/**"],
+      "deny": ["project/architecture/data/**", "project/architecture/security/**"]
+    },
+    "database-engineer": {
+      "allow": ["app/models/**", "migrations/**", "project/architecture/data/**", "tests/unit/models/**", "tests/factories.py", "tests/fixtures/**"]
+    },
+    "security-engineer": {
+      "allow": ["project/architecture/security/**", "tests/security/**", "project/sprints/reports/**", "project/sprints/bugs/**"]
+    },
+    "backend-developer": {
+      "allow": ["app/**", "tests/unit/**", "tests/conftest.py", "wsgi.py", "pyproject.toml"],
+      "deny": ["app/templates/**", "app/static/**", "app/models/**", "tests/unit/models/**", "tests/unit/ui/**"]
+    },
+    "frontend-developer": {
+      "allow": ["app/templates/**", "app/static/**", "tests/unit/ui/**"]
+    },
+    "code-reviewer": {
+      "allow": ["project/sprints/reviews/**"]
+    },
+    "verification-engineer": {
+      "allow": ["tests/integration/**", "tests/contract/**", "tests/system/**", "tests/conftest.py", "project/sprints/bugs/**", "project/sprints/reports/**"]
+    },
+    "validation-engineer": {
+      "allow": ["tests/acceptance/**", "project/sprints/reports/**", "project/sprints/bugs/**"]
+    },
+    "devops-engineer": {
+      "allow": [".github/workflows/**", "infra/**", "Dockerfile", ".dockerignore", "docker-compose*.yml", ".env.example", "Makefile", ".pre-commit-config.yaml", "pyproject.toml"]
+    },
+    "docs-writer": {
+      "allow": ["docs/**", "project/traceability.csv", "CHANGELOG.md", "README.md"]
+    }
+  }
+}

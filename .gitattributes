@@ -1,0 +1,8 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+
+# Project-owned after `tools/kit.py init`: keep the project's version when
+# merging kit updates (driver is configured by kit.py: merge.ours.driver=true).
+README.md merge=ours
+CLAUDE.md merge=ours

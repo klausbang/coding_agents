@@ -1,0 +1,29 @@
+name: kit-check
+
+# Checks the coding_agents kit itself: tools compile, generated Copilot files are
+# current, write-guard rules parse, IDs lint. Runs in the kit repo and in every project.
+
+on:
+  push:
+    paths: [".claude/**", ".github/agents/**", ".github/prompts/**", "tools/**", "templates/**", "kit.json", "project/**", "tests/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  kit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tools compile
+        run: python -m py_compile tools/*.py .claude/hooks/*.py
+      - name: Ownership rules parse
+        run: python -c "import json; json.load(open('tools/agent_roles.json')); json.load(open('kit.json'))"
+      - name: Copilot files up to date
+        run: python tools/build_copilot.py --check
+      - name: Traceability IDs
+        run: python tools/id_lint.py

@@ -1,0 +1,13 @@
+:root {
+  --ink: #18212b;
+  --bg: #f6f7f9;
+  --accent: #2b5a9b;
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+body { margin: 0; background: var(--bg); color: var(--ink); }
+.site-header, main { max-width: 960px; margin: 0 auto; padding: 1rem; }
+.brand { color: var(--ink); font-weight: 600; text-decoration: none; }
+.skip-link { position: absolute; left: -999px; }
+.skip-link:focus { left: 1rem; top: 1rem; background: #fff; padding: .5rem; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

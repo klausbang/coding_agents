@@ -1,0 +1,48 @@
+name: deploy
+
+# Owned by the devops-engineer. Builds the image once and promotes the same digest.
+# Production requires the GitHub environment "production" to have required reviewers (gate G4).
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        options: [staging, production]
+        default: staging
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write   # OIDC federation to the cloud provider
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.meta.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        run: echo "image=ghcr.io/${GITHUB_REPOSITORY,,}:${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+      - run: |
+          docker build -t "${{ steps.meta.outputs.image }}" .
+          docker push "${{ steps.meta.outputs.image }}"
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy
+        run: |
+          echo "Deploy ${{ needs.build.outputs.image }} to ${{ inputs.environment }}"
+          echo "TODO(devops-engineer): log in with OIDC, run migrations as a one-off job, roll out the image, check /health."
+          exit 1

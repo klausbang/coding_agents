@@ -1,0 +1,44 @@
+openapi: 3.1.0
+info:
+  title: "{{PROJECT_NAME}} API"
+  version: 0.1.0
+  description: Owned by the system-architect. Every operation carries an `x-id` (IF-NNN).
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      x-id: IF-001
+      summary: Liveness and database connectivity
+      security: []
+      responses:
+        "200":
+          description: Application and database are healthy
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+        "503":
+          description: Database unavailable
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Health" }
+components:
+  schemas:
+    Health:
+      type: object
+      required: [status, database]
+      properties:
+        status: { type: string, enum: [ok, degraded] }
+        database: { type: string, enum: [ok, unavailable] }
+    Problem:
+      type: object
+      description: RFC 9457 problem details
+      required: [type, title, status]
+      properties:
+        type: { type: string, format: uri-reference }
+        title: { type: string }
+        status: { type: integer }
+        detail: { type: string }
+        instance: { type: string }
+        errors:
+          type: object
+          additionalProperties: { type: array, items: { type: string } }

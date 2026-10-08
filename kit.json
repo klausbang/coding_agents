@@ -1,0 +1,33 @@
+{
+  "name": "coding_agents",
+  "version": "0.1.0",
+  "upstream": "https://github.com/klausbang/coding_agents.git",
+  "branch": "main",
+  "kit_paths": [
+    ".claude/protocol.md",
+    ".claude/orchestrator.md",
+    ".claude/agents",
+    ".claude/skills",
+    ".claude/hooks",
+    ".claude/settings.json",
+    ".github/copilot-instructions.md",
+    ".github/agents",
+    ".github/prompts",
+    ".github/instructions",
+    ".github/workflows/kit-check.yml",
+    "tools",
+    "templates",
+    "docs/kit",
+    "kit.json",
+    ".gitattributes",
+    ".gitignore"
+  ],
+  "replace_on_init": [
+    "README.md",
+    "CLAUDE.md"
+  ],
+  "placeholders": {
+    "{{PROJECT_NAME}}": "name",
+    "{{PROJECT_SLUG}}": "slug"
+  }
+}
